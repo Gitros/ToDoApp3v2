@@ -4,9 +4,9 @@ import TaskList from "./TaskList";
 const TaskListContainer = () => {
   return (
     <div className="flex justify-around">
-      <TaskList />
-      <TaskList />
-      <TaskList />
+      <TaskList status="new" />
+      <TaskList status="inProgress" />
+      <TaskList status="completed" />
     </div>
   );
 };
