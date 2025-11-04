@@ -1,10 +1,11 @@
 import React from "react";
 import Layout from "./components/Layout";
+import TaskListContainer from "./components/TaskListContainer";
 
 const App = () => {
   return (
     <Layout>
-      <h1>Elo</h1>
+      <TaskListContainer />
     </Layout>
   );
 };
