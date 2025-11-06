@@ -8,19 +8,18 @@ type ModalProps = {
 const Modal = ({ children, title, isOpen, onClose }: ModalProps) => {
   if (!isOpen) return null;
   return (
-    <dialog
-      open
-      onCancel={(e) => {
-        e.preventDefault();
-        onClose();
-      }}
-      className="w-[90vw] max-w-md rounded-2xl p-5 shadow-2xl bg-white"
-      aria-modal="true"
-      aria-label={title ?? "Dialog"}
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onClose} // click outside closes modal
     >
-      <h2 className="text-lg font-semibold mb-3">{title}</h2>
-      {children}
-    </dialog>
+      <div
+        className="w-[90vw] max-w-md rounded-2xl p-5 shadow-2xl bg-white"
+        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+      >
+        <h2 className="text-lg font-semibold mb-3">{title}</h2>
+        {children}
+      </div>
+    </div>
   );
 };
 

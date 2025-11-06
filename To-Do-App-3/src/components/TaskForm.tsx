@@ -6,28 +6,27 @@ type TaskFormProps = {
   onCancel: () => void;
 };
 
+type TaskInput = Omit<Task, "id">;
+
 const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<TaskInput>({
     title: "",
     time: "",
     description: "",
     assignee: "",
-    isCompleted: false,
+    status: "new",
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
 
-    const newValue =
-      e.target instanceof HTMLInputElement && e.target.type === "checkbox"
-        ? e.target.checked
-        : value;
-
     setForm((prev) => ({
       ...prev,
-      [name]: newValue,
+      [name]: value,
     }));
   };
 
@@ -37,6 +36,7 @@ const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
       id: crypto.randomUUID(),
       ...form,
     });
+    onCancel();
   };
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
@@ -84,14 +84,18 @@ const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
         />
       </div>
 
-      <div className="flex items-center gap-2">
-        <input
-          name="isCompleted"
-          type="checkbox"
-          checked={form.isCompleted}
+      <div>
+        <label className="block font-medium">Status</label>
+        <select
+          name="status"
+          value={form.status}
           onChange={handleChange}
-        />
-        <label>Completed?</label>
+          className="border p-2 w-full rounded"
+        >
+          <option value="new">New</option>
+          <option value="inProgress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
       </div>
 
       <div className="flex justify-end gap-2 pt-2">

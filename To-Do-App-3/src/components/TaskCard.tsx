@@ -4,7 +4,7 @@ export type Task = {
   time: string;
   description: string;
   assignee: string;
-  isCompleted?: boolean;
+  status: "new" | "inProgress" | "completed";
 };
 
 type TaskProps = {

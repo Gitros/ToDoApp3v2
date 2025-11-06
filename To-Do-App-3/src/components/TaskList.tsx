@@ -1,34 +1,12 @@
 import TaskCard, { type Task } from "./TaskCard";
 
-const taskList: Task[] = [
-  {
-    id: "1",
-    title: "Zrobić obiad",
-    time: "12:00",
-    description: "Ugotować makaron i podgrzać zupę",
-    assignee: "Owca",
-  },
-  {
-    id: "2",
-    title: "Praca domowa",
-    time: "15:00",
-    description: "Zrobić zadania z matmy",
-    assignee: "Kimi",
-  },
-  {
-    id: "3",
-    title: "Praca domowa",
-    time: "15:00",
-    description: "Zrobić zadania z matmy",
-    assignee: "Mistrzunio",
-  },
-];
-
 type TaskListProps = {
   status: "new" | "inProgress" | "completed";
+  tasks: Task[];
+  onTaskClick?: (id: string) => void;
 };
 
-const TaskList = ({ status }: TaskListProps) => {
+const TaskList = ({ status, tasks, onTaskClick }: TaskListProps) => {
   const title =
     status === "new"
       ? "New Tasks"
@@ -43,13 +21,20 @@ const TaskList = ({ status }: TaskListProps) => {
       ? "bg-yellow-500"
       : "bg-green-500";
 
+  const visible = tasks.filter((t) => t.status === status);
   return (
     <div className={`${color} min-h-64 w-80 rounded-xl shadow-lg p-4`}>
       <h2 className="text-center text-white text-xl mb-2">{title}</h2>
       <ul className="space-y-4">
-        {taskList.map((task) => (
+        {visible.map((task) => (
           <li key={task.id}>
-            <TaskCard task={task} />
+            <button
+              type="button"
+              onClick={() => onTaskClick?.(task.id)}
+              className="block text-left w-full"
+            >
+              <TaskCard task={task} />
+            </button>
           </li>
         ))}
       </ul>
