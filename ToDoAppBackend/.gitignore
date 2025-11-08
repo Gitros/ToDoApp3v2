@@ -1,0 +1,102 @@
+# --- .NET / Visual Studio ---
+## Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+## Visual Studio cache files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## ASP.NET temporary files
+[Tt]emp/
+[Tt]emporary[Aa]spnet[Ww]ebsites/
+
+## Rider
+.idea/
+
+## JetBrains Rider / VS Code
+.vscode/
+.idea/
+
+# --- Packages and dependencies ---
+# NuGet packages
+*.nupkg
+*.snupkg
+# Package restore folders
+packages/
+# Auto-generated project restore files
+project.lock.json
+project.fragment.lock.json
+
+# --- Entity Framework Core ---
+# Migration snapshot binary
+*.cache
+# Do not ignore migrations folder if you want to track migrations
+# Uncomment next line to ignore migrations if you prefer generating them locally only
+# **/Migrations/
+
+# --- Logs & Diagnostics ---
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+
+# --- Configuration secrets ---
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json.local
+*.Secret.json
+*.secrets.json
+secrets.json
+
+# --- SQL / LocalDB ---
+*.mdf
+*.ldf
+*.ndf
+
+# --- System files ---
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+*.swp
+*.swo
+
+# --- Test / Coverage ---
+TestResults/
+*.coverage
+*.coveragexml
+*.opencover.xml
+coverage*
+.coverage/
+*.codecoverage
+*.dotCover
+
+# --- Publish / Artifacts ---
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+publish/
+out/
+dist/
+wwwroot/
+
+# --- Resharper / Analyzers ---
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# --- Docker / Containers ---
+*.pid
+*.pid.lock
+.env
+.env.local
+.env.test
+.env.development.local
+docker-compose.override.yml
