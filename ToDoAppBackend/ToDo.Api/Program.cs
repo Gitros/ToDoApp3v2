@@ -33,8 +33,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// (Optional) Minimal endpoints if you don't want controllers yet:
-// app.MapGet("/api/tasks", async (IMediator m, TaskStatus? status) => await m.Send(new GetTasksQuery(status)));
-// app.MapPost("/api/tasks", async (IMediator m, CreateTaskCommand cmd) => Results.Ok(await m.Send(cmd)));
-
 app.Run();

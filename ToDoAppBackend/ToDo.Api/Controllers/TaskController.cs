@@ -21,9 +21,12 @@ public class TasksController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<TaskItem>> GetById(Guid id, [FromServices] ToDoDbContext db)
+    public async Task<ActionResult<TaskItem>> GetById(Guid id, [FromServices] IMediator mediator)
     {
-        var task = await db.Tasks.FindAsync(id);
-        return task is null ? NotFound() : Ok(task);
+        var task = await mediator.Send(new GetTaskByIdQuery(id));
+        if (task is null)
+            return NotFound();
+
+        return Ok(task);
     }
 }
