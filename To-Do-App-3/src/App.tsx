@@ -5,12 +5,22 @@ import type { Task } from "./components/TaskCard";
 import Modal from "./components/Modal";
 import TaskForm from "./components/TaskForm";
 
+type Mode = "create" | "edit";
+
 const App = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [mode, setMode] = useState<Mode>("create");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleOpenModal = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const openCreateTask = () => {
+    setMode("create");
+    setSelectedId(null);
+    setOpenModal(true);
+  };
+  const openEditTask = (id: string) => {
+    setMode("edit");
+    setSelectedId(id);
     setOpenModal(true);
   };
 
@@ -18,22 +28,35 @@ const App = () => {
 
   const handleCreateTask = (data: Task) => {
     setTasks((prev) => [data, ...prev]);
-    setOpenModal(false);
+    closeModal();
   };
+
+  const handleUpdateTask = (data: Task) => {
+    setTasks((prev) => prev.map((t) => (t.id === data.id ? data : t)));
+    closeModal();
+  };
+
+  const selectedTask = selectedId
+    ? tasks.find((t) => t.id === selectedId)
+    : undefined;
 
   return (
     <>
-      <Layout onAddTaskClick={handleOpenModal}>
-        <TaskListContainer
-          tasks={tasks}
-          onTaskClick={(id) => {
-            console.log("Clicked task:", id);
-          }}
-        />
+      <Layout onAddTaskClick={openCreateTask}>
+        <TaskListContainer tasks={tasks} onTaskClick={openEditTask} />
       </Layout>
 
-      <Modal isOpen={openModal} onClose={closeModal} title="Create Task">
-        <TaskForm onSubmit={handleCreateTask} onCancel={closeModal} />
+      <Modal
+        isOpen={openModal}
+        onClose={closeModal}
+        title={mode === "create" ? "Create Task" : "Edit Task"}
+      >
+        <TaskForm
+          mode={mode}
+          initial={selectedTask}
+          onSubmit={mode === "create" ? handleCreateTask : handleUpdateTask}
+          onCancel={closeModal}
+        />
       </Modal>
     </>
   );

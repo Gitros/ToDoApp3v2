@@ -1,21 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Task } from "./TaskCard";
 
 type TaskFormProps = {
+  mode: "create" | "edit";
+  initial?: Task;
   onSubmit: (data: Task) => void;
   onCancel: () => void;
 };
 
 type TaskInput = Omit<Task, "id">;
 
-const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
-  const [form, setForm] = useState<TaskInput>({
-    title: "",
-    time: "",
-    description: "",
-    assignee: "",
-    status: "new",
-  });
+const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
+  const [form, setForm] = useState<TaskInput>(
+    initial ?? {
+      title: "",
+      time: "",
+      description: "",
+      assignee: "",
+      status: "new",
+    }
+  );
+
+  useEffect(() => {
+    if (initial) setForm(initial);
+  }, [initial]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -33,7 +41,7 @@ const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      id: crypto.randomUUID(),
+      id: mode === "edit" && initial ? initial.id : crypto.randomUUID(),
       ...form,
     });
     onCancel();

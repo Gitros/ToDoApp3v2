@@ -10,11 +10,11 @@ const Modal = ({ children, title, isOpen, onClose }: ModalProps) => {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={onClose} // click outside closes modal
+      onClick={onClose}
     >
       <div
         className="w-[90vw] max-w-md rounded-2xl p-5 shadow-2xl bg-white"
-        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+        onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-semibold mb-3">{title}</h2>
         {children}
