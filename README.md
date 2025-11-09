@@ -45,7 +45,7 @@ Each phase of the project focuses on adding a new layer of complexity and improv
 - .NET 8 / C#
 - Entity Framework Core
 - MediatR
-- SQL Server (SQLite in development)
+- SQL Server
 - Clean Architecture
 - Keycloak *(planned)*
 
