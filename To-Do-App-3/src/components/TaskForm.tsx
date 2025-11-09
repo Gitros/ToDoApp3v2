@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Task } from "./TaskCard";
+import { type Task } from "./TaskCard";
 
 type TaskFormProps = {
   mode: "create" | "edit";
@@ -17,7 +17,8 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
       time: "",
       description: "",
       assignee: "",
-      status: "new",
+      status: 0,
+      isDeleted: false,
     }
   );
 
@@ -65,7 +66,7 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
         <input
           name="time"
           type="time"
-          value={form.time}
+          value={form.time ?? ""}
           onChange={handleChange}
           className="border p-2 w-full rounded"
         />
@@ -75,7 +76,7 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
         <label className="block font-medium">Description</label>
         <textarea
           name="description"
-          value={form.description}
+          value={form.description ?? ""}
           onChange={handleChange}
           className="border p-2 w-full rounded"
         />
@@ -86,7 +87,7 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
         <input
           name="assignee"
           type="text"
-          value={form.assignee}
+          value={form.assignee ?? ""}
           onChange={handleChange}
           className="border p-2 w-full rounded"
         />

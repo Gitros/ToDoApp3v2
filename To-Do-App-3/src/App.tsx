@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "./components/Layout";
 import TaskListContainer from "./components/TaskListContainer";
 import type { Task } from "./components/TaskCard";
@@ -13,6 +13,13 @@ const App = () => {
   const [mode, setMode] = useState<Mode>("create");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetch("https://localhost:7211/api/Tasks/GetTasks")
+      .then((response) => response.json())
+      .then((data) => setTasks(data));
+  }, []);
+
+  console.log(tasks);
   const openCreateTask = () => {
     setMode("create");
     setSelectedId(null);

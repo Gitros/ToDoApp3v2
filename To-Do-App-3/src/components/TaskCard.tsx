@@ -1,10 +1,13 @@
+import type { TASK_STATUS } from "../types/TaskStatus";
+
 export type Task = {
   id: string;
   title: string;
-  time: string;
-  description: string;
-  assignee: string;
-  status: "new" | "inProgress" | "completed";
+  time: string | null;
+  description: string | null;
+  assignee: string | null;
+  status: keyof typeof TASK_STATUS;
+  isDeleted: boolean;
 };
 
 type TaskProps = {

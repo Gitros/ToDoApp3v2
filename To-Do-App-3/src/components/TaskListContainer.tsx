@@ -9,9 +9,9 @@ type TaskListContainerProps = {
 const TaskListContainer = ({ tasks, onTaskClick }: TaskListContainerProps) => {
   return (
     <div className="flex justify-around">
-      <TaskList status="new" tasks={tasks} onTaskClick={onTaskClick} />
-      <TaskList status="inProgress" tasks={tasks} onTaskClick={onTaskClick} />
-      <TaskList status="completed" tasks={tasks} onTaskClick={onTaskClick} />
+      <TaskList status={0} tasks={tasks} onTaskClick={onTaskClick} />
+      <TaskList status={1} tasks={tasks} onTaskClick={onTaskClick} />
+      <TaskList status={2} tasks={tasks} onTaskClick={onTaskClick} />
     </div>
   );
 };

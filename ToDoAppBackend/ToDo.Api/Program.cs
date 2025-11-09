@@ -1,9 +1,6 @@
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using ToDo.Application.Tasks.Commands;
-using ToDo.Application.Tasks.Queries;
 using ToDo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
