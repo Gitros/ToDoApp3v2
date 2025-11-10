@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("frontend", p => p
-        .WithOrigins("http://localhost:5173", "http://localhost:3000")
+        .WithOrigins("https://localhost:5173", "https://localhost:3000")
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
@@ -41,9 +41,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
 
 app.UseCors("frontend");
+
+app.UseAuthorization();
 
 app.MapControllers();
 

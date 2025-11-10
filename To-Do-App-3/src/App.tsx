@@ -1,25 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "./components/Layout";
 import TaskListContainer from "./components/TaskListContainer";
 import type { Task } from "./components/TaskCard";
 import Modal from "./components/Modal";
 import TaskForm from "./components/TaskForm";
+import { useTasks } from "./hooks/useTasks";
+import { useCreateTask, useUpdateTask } from "./hooks/useTaskMutations";
 
 type Mode = "create" | "edit";
 
 const App = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { data: tasks, isLoading, isError, error } = useTasks();
+  const createTask = useCreateTask();
+  const updateTask = useUpdateTask();
+
   const [openModal, setOpenModal] = useState(false);
   const [mode, setMode] = useState<Mode>("create");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch("https://localhost:7211/api/Tasks/GetTasks")
-      .then((response) => response.json())
-      .then((data) => setTasks(data));
-  }, []);
-
-  console.log(tasks);
   const openCreateTask = () => {
     setMode("create");
     setSelectedId(null);
@@ -30,27 +28,29 @@ const App = () => {
     setSelectedId(id);
     setOpenModal(true);
   };
-
   const closeModal = () => setOpenModal(false);
 
-  const handleCreateTask = (data: Task) => {
-    setTasks((prev) => [data, ...prev]);
+  const handleCreateTask = async (data: Omit<Task, "id">) => {
+    await createTask.mutateAsync(data);
     closeModal();
   };
 
-  const handleUpdateTask = (data: Task) => {
-    setTasks((prev) => prev.map((t) => (t.id === data.id ? data : t)));
+  const handleUpdateTask = async (data: Task) => {
+    await updateTask.mutateAsync(data);
     closeModal();
   };
 
   const selectedTask = selectedId
-    ? tasks.find((t) => t.id === selectedId)
+    ? tasks?.find((t) => t.id === selectedId)
     : undefined;
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <>
       <Layout onAddTaskClick={openCreateTask}>
-        <TaskListContainer tasks={tasks} onTaskClick={openEditTask} />
+        <TaskListContainer tasks={tasks ?? []} onTaskClick={openEditTask} />
       </Layout>
 
       <Modal

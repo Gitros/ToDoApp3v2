@@ -1,4 +1,4 @@
-import { TASK_STATUS } from "../types/TaskStatus";
+import { TASK_STATUS } from "../lib/types/TaskStatus";
 import TaskCard, { type Task } from "./TaskCard";
 
 type TaskListProps = {

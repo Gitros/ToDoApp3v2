@@ -1,4 +1,4 @@
-import type { TASK_STATUS } from "../types/TaskStatus";
+import type { TASK_STATUS } from "../lib/types/TaskStatus";
 
 export type Task = {
   id: string;
