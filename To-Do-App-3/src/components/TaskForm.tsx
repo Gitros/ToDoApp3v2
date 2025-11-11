@@ -1,30 +1,47 @@
 import { useEffect, useState } from "react";
 import { type Task } from "./TaskCard";
 
-type TaskFormProps = {
-  mode: "create" | "edit";
+type CreateProps = {
+  mode: "create";
+  initial?: undefined;
+  onSubmit: (data: Omit<Task, "id">) => void;
+  onCancel: () => void;
+};
+
+type EditProps = {
+  mode: "edit";
   initial?: Task;
   onSubmit: (data: Task) => void;
   onCancel: () => void;
 };
 
+type TaskFormProps = CreateProps | EditProps;
+
 type TaskInput = Omit<Task, "id">;
 
 const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
+  const toInput = (t: Task): TaskInput => {
+    const { id: _ignore, ...rest } = t;
+    return rest;
+  };
   const [form, setForm] = useState<TaskInput>(
-    initial ?? {
-      title: "",
-      time: "",
-      description: "",
-      assignee: "",
-      status: 0,
-      isDeleted: false,
-    }
+    initial
+      ? toInput(initial)
+      : {
+          title: "",
+          time: null,
+          description: null,
+          assignee: null,
+          status: 0 as 0 | 1 | 2,
+          isDeleted: false,
+        }
   );
 
   useEffect(() => {
-    if (initial) setForm(initial);
-  }, [initial]);
+    if (mode === "edit" && initial) {
+      setForm(toInput(initial));
+    }
+  }, [mode, initial]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -41,10 +58,12 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      id: mode === "edit" && initial ? initial.id : crypto.randomUUID(),
-      ...form,
-    });
+
+    if (mode === "create") {
+      onSubmit({ ...form });
+    } else {
+      onSubmit({ id: initial!.id, ...form });
+    }
     onCancel();
   };
   return (
@@ -66,8 +85,20 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
         <input
           name="time"
           type="time"
-          value={form.time ?? ""}
-          onChange={handleChange}
+          value={
+            form.time ? new Date(form.time).toISOString().slice(11, 16) : ""
+          }
+          onChange={(e) => {
+            const hhmm = e.target.value;
+            setForm((prev) => ({
+              ...prev,
+              time: hhmm
+                ? new Date(
+                    `${new Date().toISOString().slice(0, 10)}T${hhmm}:00`
+                  ).toISOString()
+                : null,
+            }));
+          }}
           className="border p-2 w-full rounded"
         />
       </div>
@@ -98,12 +129,17 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
         <select
           name="status"
           value={form.status}
-          onChange={handleChange}
+          onChange={(e) =>
+            setForm((p) => ({
+              ...p,
+              status: Number(e.target.value) as 0 | 1 | 2,
+            }))
+          }
           className="border p-2 w-full rounded"
         >
-          <option value="new">New</option>
-          <option value="inProgress">In Progress</option>
-          <option value="completed">Completed</option>
+          <option value={0}>New</option>
+          <option value={1}>In Progress</option>
+          <option value={2}>Completed</option>
         </select>
       </div>
 

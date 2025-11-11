@@ -58,12 +58,20 @@ const App = () => {
         onClose={closeModal}
         title={mode === "create" ? "Create Task" : "Edit Task"}
       >
-        <TaskForm
-          mode={mode}
-          initial={selectedTask}
-          onSubmit={mode === "create" ? handleCreateTask : handleUpdateTask}
-          onCancel={closeModal}
-        />
+        {mode === "create" ? (
+          <TaskForm
+            mode="create"
+            onSubmit={handleCreateTask}
+            onCancel={closeModal}
+          />
+        ) : selectedTask ? (
+          <TaskForm
+            mode="edit"
+            initial={selectedTask}
+            onSubmit={handleUpdateTask}
+            onCancel={closeModal}
+          />
+        ) : null}
       </Modal>
     </>
   );
