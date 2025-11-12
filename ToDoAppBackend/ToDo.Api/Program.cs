@@ -24,8 +24,7 @@ builder.Services.AddDbContext<ToDoDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 // MediatR (scan Application assembly that contains handlers)
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssemblyContaining<CreateTaskCommand>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UpdateTaskHandler).Assembly));
 
 // Controllers / Swagger
 builder.Services.AddControllers();

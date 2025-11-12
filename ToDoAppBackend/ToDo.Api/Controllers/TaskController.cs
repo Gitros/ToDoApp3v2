@@ -8,16 +8,16 @@ using ToDo.Domain;
 [Route("api/[controller]")]
 public class TasksController(IMediator mediator) : ControllerBase
 {
-    [HttpGet("GetTasks")]
-    public async Task<ActionResult<List<TaskItem>>> GetTasks([FromQuery] ToDo.Domain.TaskStatus? status)
-        => await mediator.Send(new GetTasksQuery(status));
-
-    [HttpPost]
+    [HttpPost("CreateTask")]
     public async Task<ActionResult<Guid>> CreateTask([FromBody] CreateTaskCommand cmd)
     {
         var id = await mediator.Send(cmd);
         return CreatedAtAction(nameof(GetTaskById), new { id }, id);
     }
+
+    [HttpGet("GetTasks")]
+    public async Task<ActionResult<List<TaskItem>>> GetTasks([FromQuery] ToDo.Domain.TaskStatus? status)
+    => await mediator.Send(new GetTasksQuery(status));
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<TaskItem>> GetTaskById(Guid id, [FromServices] IMediator mediator)
@@ -27,5 +27,15 @@ public class TasksController(IMediator mediator) : ControllerBase
             return NotFound();
 
         return Ok(task);
+    }
+
+    [HttpPut("UpdateTask/{id:guid}")]
+    public async Task<IActionResult> UpdateTask(Guid id, [FromBody] UpdateTaskCommand cmd, CancellationToken ct)
+    {
+        if (id != cmd.Id)
+            return BadRequest("Route id and body id do not match.");
+
+        await mediator.Send(cmd, ct);
+        return NoContent();
     }
 }
