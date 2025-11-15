@@ -5,7 +5,11 @@ import type { Task } from "./components/TaskCard";
 import Modal from "./components/Modal";
 import TaskForm from "./components/TaskForm";
 import { useTasks } from "./hooks/useTasks";
-import { useCreateTask, useUpdateTask } from "./hooks/useTaskMutations";
+import {
+  useCreateTask,
+  useDeleteTask,
+  useUpdateTask,
+} from "./hooks/useTaskMutations";
 
 type Mode = "create" | "edit";
 
@@ -13,6 +17,7 @@ const App = () => {
   const { data: tasks, isLoading, isError, error } = useTasks();
   const createTask = useCreateTask();
   const updateTask = useUpdateTask();
+  const deleteTask = useDeleteTask();
 
   const [openModal, setOpenModal] = useState(false);
   const [mode, setMode] = useState<Mode>("create");
@@ -37,6 +42,11 @@ const App = () => {
 
   const handleUpdateTask = async (data: Task) => {
     await updateTask.mutateAsync(data);
+    closeModal();
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    await deleteTask.mutateAsync(id);
     closeModal();
   };
 
@@ -70,6 +80,7 @@ const App = () => {
             initial={selectedTask}
             onSubmit={handleUpdateTask}
             onCancel={closeModal}
+            onDelete={handleDeleteTask}
           />
         ) : null}
       </Modal>

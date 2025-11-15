@@ -40,3 +40,19 @@ export const useUpdateTask = () => {
     },
   });
 };
+
+export const useDeleteTask = () => {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`${API}/DeleteTask/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+};

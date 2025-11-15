@@ -6,6 +6,7 @@ type CreateProps = {
   initial?: undefined;
   onSubmit: (data: Omit<Task, "id">) => void;
   onCancel: () => void;
+  onDelete?: (id: string) => void;
 };
 
 type EditProps = {
@@ -13,13 +14,20 @@ type EditProps = {
   initial?: Task;
   onSubmit: (data: Task) => void;
   onCancel: () => void;
+  onDelete?: (id: string) => void;
 };
 
 type TaskFormProps = CreateProps | EditProps;
 
 type TaskInput = Omit<Task, "id">;
 
-const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
+const TaskForm = ({
+  mode,
+  initial,
+  onSubmit,
+  onCancel,
+  onDelete,
+}: TaskFormProps) => {
   const toInput = (t: Task): TaskInput => {
     const { id: _ignore, ...rest } = t;
     return rest;
@@ -143,20 +151,31 @@ const TaskForm = ({ mode, initial, onSubmit, onCancel }: TaskFormProps) => {
         </select>
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 border rounded hover:bg-gray-100"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Submit
-        </button>
+      <div className="flex justify-between items-center pt-2">
+        {mode === "edit" && initial && (
+          <button
+            type="button"
+            onClick={() => onDelete?.(initial.id)}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Delete
+          </button>
+        )}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="px-4 py-2 border rounded hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </form>
   );

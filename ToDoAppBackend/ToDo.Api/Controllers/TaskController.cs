@@ -39,7 +39,7 @@ public class TasksController(IMediator mediator) : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("DeleteTask/{id:guid}")]
     public async Task<IActionResult> DeleteTask(Guid id)
     {
         await mediator.Send(new DeleteTaskCommand(id));
