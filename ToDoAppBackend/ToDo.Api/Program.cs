@@ -28,7 +28,7 @@ builder.Services.AddDbContext<ToDoDbContext>(opt =>
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UpdateTaskHandler).Assembly));
 
 // Automapper
-builder.Services.AddAutoMapper(typeof(TaskProfile).Assembly);
+builder.Services.AddAutoMapper(cfg => { }, typeof(TaskProfile).Assembly);
 
 // Controllers / Swagger
 builder.Services.AddControllers();

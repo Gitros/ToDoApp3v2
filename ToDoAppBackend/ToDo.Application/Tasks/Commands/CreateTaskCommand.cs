@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using ToDo.Domain;
 using ToDo.Infrastructure;
 
@@ -14,19 +15,17 @@ public record CreateTaskCommand(
 public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, Guid>
 {
     private readonly ToDoDbContext _db;
-    public CreateTaskHandler(ToDoDbContext db) => _db = db;
+    private readonly IMapper _mapper;
+
+    public CreateTaskHandler(ToDoDbContext db, IMapper mapper)
+    {
+        _db = db;
+        _mapper = mapper;
+    }
 
     public async Task<Guid> Handle(CreateTaskCommand r, CancellationToken ct)
     {
-        var entity = new TaskItem
-        {
-            Id = Guid.NewGuid(),
-            Title = r.Title,
-            Time = r.Time,
-            Description = r.Description,
-            Assignee = r.Assignee,
-            Status = r.Status
-        };
+        var entity = _mapper.Map<TaskItem>(r);
 
         _db.Tasks.Add( entity );
         await _db.SaveChangesAsync(ct);
