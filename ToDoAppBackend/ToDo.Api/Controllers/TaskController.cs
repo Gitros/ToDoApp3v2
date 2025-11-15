@@ -38,4 +38,11 @@ public class TasksController(IMediator mediator) : ControllerBase
         await mediator.Send(cmd, ct);
         return NoContent();
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteTask(Guid id)
+    {
+        await mediator.Send(new DeleteTaskCommand(id));
+        return NoContent();
+    }
 }
