@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ToDo.Application.Tasks.Mapping;
 using System.Text.Json;
 using ToDo.Application.Tasks.Commands;
 using ToDo.Infrastructure;
@@ -25,6 +26,9 @@ builder.Services.AddDbContext<ToDoDbContext>(opt =>
 
 // MediatR (scan Application assembly that contains handlers)
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UpdateTaskHandler).Assembly));
+
+// Automapper
+builder.Services.AddAutoMapper(typeof(TaskProfile).Assembly);
 
 // Controllers / Swagger
 builder.Services.AddControllers();

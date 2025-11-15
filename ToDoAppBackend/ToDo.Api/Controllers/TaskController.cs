@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ToDo.Application.Tasks.Commands;
+using ToDo.Application.Tasks.Dtos;
 using ToDo.Application.Tasks.Queries;
 using ToDo.Domain;
 
@@ -16,11 +17,11 @@ public class TasksController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("GetTasks")]
-    public async Task<ActionResult<List<TaskItem>>> GetTasks([FromQuery] ToDo.Domain.TaskStatus? status)
+    public async Task<ActionResult<List<TaskReadDto>>> GetTasks([FromQuery] ToDo.Domain.TaskStatus? status)
     => await mediator.Send(new GetTasksQuery(status));
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<TaskItem>> GetTaskById(Guid id, [FromServices] IMediator mediator)
+    public async Task<ActionResult<TaskReadDto>> GetTaskById(Guid id)
     {
         var task = await mediator.Send(new GetTaskByIdQuery(id));
         if (task is null)
