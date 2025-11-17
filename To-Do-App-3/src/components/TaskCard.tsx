@@ -1,14 +1,6 @@
-import type { TASK_STATUS } from "../lib/types/TaskStatus";
+import type { TaskFromSchema } from "../schema/task.schema";
 
-export type Task = {
-  id: string;
-  title: string;
-  time: string | null;
-  description: string | null;
-  assignee: string | null;
-  status: keyof typeof TASK_STATUS;
-  isDeleted: boolean;
-};
+export type Task = TaskFromSchema;
 
 type TaskProps = {
   task: Task;
@@ -32,10 +24,10 @@ const TaskCard = ({ task }: TaskProps) => {
       </div>
       <div className="mt-2 grid grid-cols-[1fr_auto] items-start gap-4">
         <p className="text-sm text-gray-700 overflow-hidden text-ellipsis">
-          {task.description}
+          {task.description ?? "No description"}
         </p>
         <p className="text-sm text-gray-600 text-right w-24 truncate">
-          {task.assignee}
+          {task.assignee ?? "Unassigned"}
         </p>
       </div>
     </div>

@@ -1,20 +1,32 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Task } from "../components/TaskCard";
+import { type TaskFromSchema, taskSchema } from "../schema/task.schema";
+import {
+  type CreateTaskDto,
+  createTaskSchema,
+} from "../schema/taskCreate.schema";
+import {
+  updateTaskSchema,
+  type UpdateTaskDto,
+} from "../schema/taskUpdate.schema";
 
 const API = "https://localhost:7211/api/Tasks";
 
 export const useCreateTask = () => {
   const qc = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (data: Omit<Task, "id">) => {
+  return useMutation<TaskFromSchema, Error, CreateTaskDto>({
+    mutationFn: async (data) => {
+      const validBody = createTaskSchema.parse(data);
       const res = await fetch(`${API}/CreateTask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(validBody),
       });
-      if (!res.ok) throw new Error("Failed to create");
-      return (await res.json()) as Task;
+      if (!res.ok) throw new Error("Falied to create");
+
+      const json = await res.json();
+
+      return taskSchema.parse(json);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["tasks"] });
@@ -25,15 +37,17 @@ export const useCreateTask = () => {
 export const useUpdateTask = () => {
   const qc = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (task: Task) => {
-      const res = await fetch(`${API}/UpdateTask/${task.id}`, {
+  return useMutation<void, Error, UpdateTaskDto>({
+    mutationFn: async (task) => {
+      const validBody = updateTaskSchema.parse(task);
+
+      const res = await fetch(`${API}/UpdateTask/${validBody.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(task),
+        body: JSON.stringify(validBody),
       });
+
       if (!res.ok) throw new Error("Failed to update");
-      return;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["tasks"] });
@@ -44,8 +58,8 @@ export const useUpdateTask = () => {
 export const useDeleteTask = () => {
   const qc = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (id: string) => {
+  return useMutation<void, Error, string>({
+    mutationFn: async (id) => {
       const res = await fetch(`${API}/DeleteTask/${id}`, {
         method: "DELETE",
       });

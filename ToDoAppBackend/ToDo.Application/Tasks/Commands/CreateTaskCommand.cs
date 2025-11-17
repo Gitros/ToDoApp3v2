@@ -9,7 +9,7 @@ public record CreateTaskCommand(
     string Title,
     DateTime? Time,
     string? Description,
-    string Assignee,
+    string? Assignee,
     Domain.TaskStatus Status
     ) : IRequest<Guid>;
 public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, Guid>

@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { type Task } from "./TaskCard";
+import type { CreateTaskDto } from "../schema/taskCreate.schema";
+import type { UpdateTaskDto } from "../schema/taskUpdate.schema";
 
 type CreateProps = {
   mode: "create";
-  initial?: undefined;
-  onSubmit: (data: Omit<Task, "id">) => void;
+  initial?: never;
+  onSubmit: (data: CreateTaskDto) => void;
   onCancel: () => void;
   onDelete?: (id: string) => void;
 };
@@ -12,14 +15,14 @@ type CreateProps = {
 type EditProps = {
   mode: "edit";
   initial?: Task;
-  onSubmit: (data: Task) => void;
+  onSubmit: (data: UpdateTaskDto) => void;
   onCancel: () => void;
   onDelete?: (id: string) => void;
 };
 
 type TaskFormProps = CreateProps | EditProps;
 
-type TaskInput = Omit<Task, "id">;
+type TaskInput = Omit<Task, "id"> & { isDeleted?: boolean };
 
 const TaskForm = ({
   mode,
@@ -29,7 +32,7 @@ const TaskForm = ({
   onDelete,
 }: TaskFormProps) => {
   const toInput = (t: Task): TaskInput => {
-    const { id: _ignore, ...rest } = t;
+    const { id: _, ...rest } = t;
     return rest;
   };
   const [form, setForm] = useState<TaskInput>(

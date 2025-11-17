@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Layout from "./components/Layout";
 import TaskListContainer from "./components/TaskListContainer";
-import type { Task } from "./components/TaskCard";
 import Modal from "./components/Modal";
 import TaskForm from "./components/TaskForm";
 import { useTasks } from "./hooks/useTasks";
@@ -10,6 +9,8 @@ import {
   useDeleteTask,
   useUpdateTask,
 } from "./hooks/useTaskMutations";
+import type { CreateTaskDto } from "./schema/taskCreate.schema";
+import type { UpdateTaskDto } from "./schema/taskUpdate.schema";
 
 type Mode = "create" | "edit";
 
@@ -35,12 +36,12 @@ const App = () => {
   };
   const closeModal = () => setOpenModal(false);
 
-  const handleCreateTask = async (data: Omit<Task, "id">) => {
+  const handleCreateTask = async (data: CreateTaskDto) => {
     await createTask.mutateAsync(data);
     closeModal();
   };
 
-  const handleUpdateTask = async (data: Task) => {
+  const handleUpdateTask = async (data: UpdateTaskDto) => {
     await updateTask.mutateAsync(data);
     closeModal();
   };
@@ -68,13 +69,14 @@ const App = () => {
         onClose={closeModal}
         title={mode === "create" ? "Create Task" : "Edit Task"}
       >
-        {mode === "create" ? (
+        {mode === "create" && (
           <TaskForm
             mode="create"
             onSubmit={handleCreateTask}
             onCancel={closeModal}
           />
-        ) : selectedTask ? (
+        )}
+        {selectedTask && (
           <TaskForm
             mode="edit"
             initial={selectedTask}
@@ -82,7 +84,7 @@ const App = () => {
             onCancel={closeModal}
             onDelete={handleDeleteTask}
           />
-        ) : null}
+        )}
       </Modal>
     </>
   );

@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { type Task } from "../components/TaskCard";
 import { getTasks } from "../api/tasksApi";
+import type { TaskFromSchema } from "../schema/task.schema";
 
 export const useTasks = () => {
-  return useQuery<Task[], Error>({
+  return useQuery<TaskFromSchema[], Error>({
     queryKey: ["tasks"],
     queryFn: getTasks,
     staleTime: 1000 * 60,
