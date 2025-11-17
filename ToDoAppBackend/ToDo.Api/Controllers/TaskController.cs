@@ -1,14 +1,15 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDo.Application.Tasks.Commands;
 using ToDo.Application.Tasks.Dtos;
 using ToDo.Application.Tasks.Queries;
-using ToDo.Domain;
 
 [ApiController]
 [Route("api/[controller]")]
 public class TasksController(IMediator mediator) : ControllerBase
 {
+    [Authorize(Roles = "admin")]
     [HttpPost("CreateTask")]
     public async Task<ActionResult<Guid>> CreateTask([FromBody] CreateTaskCommand cmd)
     {
@@ -16,6 +17,7 @@ public class TasksController(IMediator mediator) : ControllerBase
         return CreatedAtAction(nameof(GetTaskById), new { id }, id);
     }
 
+    [Authorize(Roles  = "admin")]
     [HttpGet("GetTasks")]
     public async Task<ActionResult<List<TaskReadDto>>> GetTasks([FromQuery] ToDo.Domain.TaskStatus? status)
     => await mediator.Send(new GetTasksQuery(status));

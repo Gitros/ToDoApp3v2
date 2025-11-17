@@ -1,10 +1,23 @@
+using Keycloak.AuthServices.Authentication;
+using Keycloak.AuthServices.Authorization;
 using Microsoft.EntityFrameworkCore;
-using ToDo.Application.Tasks.Mapping;
 using System.Text.Json;
 using ToDo.Application.Tasks.Commands;
+using ToDo.Application.Tasks.Mapping;
 using ToDo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddKeycloakWebApiAuthentication(builder.Configuration);
+
+// 2) Autoryzacja (opcjonalnie – fallback = wymaga auth)
+builder.Services
+    .AddAuthorization(options =>
+    {
+        options.FallbackPolicy = options.DefaultPolicy;
+    })
+        .AddKeycloakAuthorization(builder.Configuration);
 
 builder.Services.AddCors(opt =>
 {
@@ -47,6 +60,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("frontend");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
