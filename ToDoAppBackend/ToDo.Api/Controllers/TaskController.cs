@@ -11,10 +11,10 @@ public class TasksController(IMediator mediator) : ControllerBase
 {
     [Authorize(Roles = "admin")]
     [HttpPost("CreateTask")]
-    public async Task<ActionResult<Guid>> CreateTask([FromBody] CreateTaskCommand cmd)
+    public async Task<ActionResult<TaskReadDto>> CreateTask([FromBody] CreateTaskCommand cmd)
     {
-        var id = await mediator.Send(cmd);
-        return CreatedAtAction(nameof(GetTaskById), new { id }, id);
+        var task = await mediator.Send(cmd);
+        return CreatedAtAction(nameof(GetTaskById), new {id = task.Id}, task);
     }
 
     [Authorize(Roles  = "admin")]

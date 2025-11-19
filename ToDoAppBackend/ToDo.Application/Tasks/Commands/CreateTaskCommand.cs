@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using ToDo.Application.Tasks.Dtos;
 using ToDo.Domain;
 using ToDo.Infrastructure;
 
@@ -11,8 +12,8 @@ public record CreateTaskCommand(
     string? Description,
     string? Assignee,
     Domain.TaskStatus Status
-    ) : IRequest<Guid>;
-public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, Guid>
+    ) : IRequest<TaskReadDto>;
+public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, TaskReadDto>
 {
     private readonly ToDoDbContext _db;
     private readonly IMapper _mapper;
@@ -23,12 +24,12 @@ public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, Guid>
         _mapper = mapper;
     }
 
-    public async Task<Guid> Handle(CreateTaskCommand r, CancellationToken ct)
+    public async Task<TaskReadDto> Handle(CreateTaskCommand r, CancellationToken ct)
     {
         var entity = _mapper.Map<TaskItem>(r);
 
         _db.Tasks.Add( entity );
         await _db.SaveChangesAsync(ct);
-        return entity.Id;
+        return _mapper.Map<TaskReadDto>(entity) ;
     }
 }

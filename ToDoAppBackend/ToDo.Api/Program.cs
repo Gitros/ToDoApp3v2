@@ -11,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddKeycloakWebApiAuthentication(builder.Configuration);
 
-// 2) Autoryzacja (opcjonalnie – fallback = wymaga auth)
 builder.Services
     .AddAuthorization(options =>
     {

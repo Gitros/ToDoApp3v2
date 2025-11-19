@@ -8,24 +8,29 @@ import {
   updateTaskSchema,
   type UpdateTaskDto,
 } from "../schema/taskUpdate.schema";
+import keycloak from "../keycloak";
 
 const API = "https://localhost:7211/api/Tasks";
 
 export const useCreateTask = () => {
   const qc = useQueryClient();
+  const token = keycloak.token;
 
   return useMutation<TaskFromSchema, Error, CreateTaskDto>({
     mutationFn: async (data) => {
       const validBody = createTaskSchema.parse(data);
       const res = await fetch(`${API}/CreateTask`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(validBody),
       });
       if (!res.ok) throw new Error("Falied to create");
 
       const json = await res.json();
-
+      console.log("CreateTask response:", json);
       return taskSchema.parse(json);
     },
     onSuccess: () => {
