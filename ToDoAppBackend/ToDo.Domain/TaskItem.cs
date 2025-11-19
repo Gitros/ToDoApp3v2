@@ -9,6 +9,9 @@ public class TaskItem
     public string? Assignee { get; set; }
     public TaskStatus Status { get; set; } = TaskStatus.New;
     public bool IsDeleted { get; set; }
+
+    public Guid CreatedById { get; set; }
+    public AppUser CreatedBy { get; set; } = default!;
 }
 
 public enum TaskStatus
