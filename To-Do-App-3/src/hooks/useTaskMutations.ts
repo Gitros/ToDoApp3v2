@@ -41,6 +41,7 @@ export const useCreateTask = () => {
 
 export const useUpdateTask = () => {
   const qc = useQueryClient();
+  const token = keycloak.token;
 
   return useMutation<void, Error, UpdateTaskDto>({
     mutationFn: async (task) => {
@@ -48,7 +49,10 @@ export const useUpdateTask = () => {
 
       const res = await fetch(`${API}/UpdateTask/${validBody.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(validBody),
       });
 
@@ -62,11 +66,15 @@ export const useUpdateTask = () => {
 
 export const useDeleteTask = () => {
   const qc = useQueryClient();
+  const token = keycloak.token;
 
   return useMutation<void, Error, string>({
     mutationFn: async (id) => {
       const res = await fetch(`${API}/DeleteTask/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
       });
       if (!res.ok) throw new Error("Failed to delete");
     },
